@@ -16,7 +16,7 @@ const NewsListBlock = styled.div`
   }
 `;
 
-const NewsList = () => {
+const NewsList = ({ category }) => {
   const [articles, setArticles] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -25,8 +25,9 @@ const NewsList = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
+        const query = category === 'all' ? '' : `&category=${category}`;
         const response = await axios.get(
-          'http://newsapi.org/v2/top-headlines?country=kr&apiKey=e4116cb619b94614a1916adb70cf89e5',
+          `http://newsapi.org/v2/top-headlines?country=kr${query}&apiKey=e4116cb619b94614a1916adb70cf89e5`,
         );
         setArticles(response.data.articles);
       } catch (error) {
@@ -35,7 +36,7 @@ const NewsList = () => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [category]); // category 값이 바뀔 떄마다 뉴스를 새로 불러와야 하기 떄문에 의존 배열에 category를 넣음
 
   // 대기 중일 떄
   if (loading) {
