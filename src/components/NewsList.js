@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import NewsItem from './NewsItem';
+import axios from 'axios';
 
 const NewsListBlock = styled.div`
   box-sizing: border-box;
@@ -23,14 +24,41 @@ const smapleArticle = {
 };
 
 const NewsList = () => {
+  const [articles, setArticles] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // async를 사용하는 함수 따로 선언
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          'http://newsapi.org/v2/top-headlines?country=kr&apiKey=e4116cb619b94614a1916adb70cf89e5',
+        );
+        setArticles(response.data.articles);
+      } catch (error) {
+        console.log(error);
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  // 대기 중일 떄
+  if (loading) {
+    return <NewsListBlock>대기 중...</NewsListBlock>;
+  }
+  // 아직 articles 값이 설정되지 않았을 떄
+  if (!articles) {
+    return null;
+  }
+
+  // articles 값이 있을 떄
   return (
     <NewsListBlock>
-      <NewsItem article={smapleArticle} />
-      <NewsItem article={smapleArticle} />
-      <NewsItem article={smapleArticle} />
-      <NewsItem article={smapleArticle} />
-      <NewsItem article={smapleArticle} />
-      <NewsItem article={smapleArticle} />
+      {articles.map((article) => (
+        <NewsItem key={articles.url} article={article} />
+      ))}
     </NewsListBlock>
   );
 };
