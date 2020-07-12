@@ -4,8 +4,8 @@ import axios from 'axios';
 const App = () => {
   const [data, setData] = useState(null);
 
-  const onClick = () => {
-    axios
+  const onClick = async () => {
+    await axios
       .get('https://jsonplaceholder.typicode.com/todos/1')
       .then((response) => {
         setData(response.data);
