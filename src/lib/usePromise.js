@@ -12,15 +12,15 @@ const usePromise = (promiseCreate, deps) => {
       try {
         const resolved = await promiseCreate();
         setResolved(resolved);
-      } catch (error) {
-        setError(error);
+      } catch (e) {
+        setError(e);
       }
       setLoading(false);
     };
     process();
     /* 특정 줄 eslint 수정하기 */
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deps]);
+  }, deps);
 
   return [loading, resolved, error];
 };
